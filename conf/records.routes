@@ -1,0 +1,6 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# MET API
+GET    /v0.:format    controllers.RecordsController.getRecords(sources: Option[String], sourcenames: Option[String], counties: Option[String], municipalities: Option[String], elements: Option[String], months: Option[String], fields: Option[String], format: String)

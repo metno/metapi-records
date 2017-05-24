@@ -1,5 +1,5 @@
-Climate normals service for MET API
-==============================================
+Records service for MET API
+===========================
 
 This module implements a service for retrieving records.
 
@@ -14,7 +14,7 @@ db.kdvh.url = "jdbc:postgresql://<dev-kdvh-proxy>:5432/<database name>"
 db.kdvh.username = "<your-user-name>
 db.kdvh.password = "<your-password>"
 db.kdvh.logStatements = true
-play.http.router = climatenormals.Routes
+play.http.router = records.Routes
 mail.override.address = "<your-email>"
 play.evolutions.db.authorization.autoApply=true
 auth.active=false
