@@ -56,7 +56,7 @@ class RecordsController @Inject()(recordsAccess: RecordsAccess) extends Controll
   )
   def getRecords( // scalastyle:ignore public.methods.have.type
     // scalastyle:off line.size.limit
-    @ApiParam(value = "The sources to get records for as a comma-separated list. Each source should be of the form SN&lt;number&gt;. If left out, the output is not filtered on source.")
+    @ApiParam(value = "The sources to get records for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>. If left out, the output is not filtered on source.")
     sources: Option[String],
     @ApiParam(value = "The source names to get records for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>. If left out, the output is not filtered on source name.")
     sourcenames: Option[String],
@@ -68,7 +68,7 @@ class RecordsController @Inject()(recordsAccess: RecordsAccess) extends Controll
     elements: Option[String],
     @ApiParam(value = "The months to get records for as a comma-separated list of integers or integer ranges between 1 and 12, e.g. '1,5,8-12'.  If left out, the output is not filtered on month.")
     months: Option[String],
-    @ApiParam(value = "The information to return as a comma-separated list of 'sourceid', 'sourcename', 'county', 'municipality', 'elementid', 'month', 'date1', 'date2', or 'record'. For example 'county,month,date1,record'. If omitted, all fields are returned.")
+    @ApiParam(value = "The information to return as a comma-separated list of 'sourceid', 'sourcename', 'county', 'municipality', 'elementid', 'month', 'date1', 'date2', or 'record'. For example 'county,month,date1,elementid,record'. If omitted, all fields are returned.")
     fields: Option[String],
     @ApiParam(value = "The output format of the result.",
       allowableValues = "jsonld",
