@@ -177,7 +177,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
           date1 = if (omitDate1) None else r.date1,
           date2 = if (omitDate2) None else r.date2,
           record = if (omitRecord) None else r.record
-        )).distinct.sortBy(r => (r.elementId, r.county, r.month))
+        )).distinct.sortBy(r => (r.elementId, r.county, r.month, -Math.abs(r.record.get)))
 
     }
     // scalastyle:on cyclomatic.complexity
