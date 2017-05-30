@@ -98,8 +98,8 @@ class StationRecordsAccess extends ProdRecordsAccess {
       get[Int]("month") ~
       get[String]("date1") ~
       get[Option[String]]("date2") ~
-      get[Double]("record") map {
-      case sourceid~sourcename~county~municipality~elementid~month~date1~date2~record
+      get[Double]("value") map {
+      case sourceid~sourcename~county~municipality~elementid~month~date1~date2~value
       => Record(
         Some(sourceid),
         Some(sourcename),
@@ -109,7 +109,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
         Some(month),
         Some(date1),
         date2,
-        Some(record)
+        Some(value)
       )
     }
   }
@@ -125,7 +125,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
        |  to_char(dato_d, 'MM')::int AS month,
        |  to_char(dato_d, 'YYYY-MM-DD') as date1,
        |  to_char(dato_m, 'YYYY-MM-DD') as date2,
-       |  record
+       |  record as value
        |FROM t_records
       """.stripMargin
   }
@@ -135,7 +135,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
   override def records(qp: RecordsQueryParameters): List[Record] = {
 
     val fields :Set[String] = FieldSpecification.parse(qp.fields)
-    val suppFields = Set("sourceid", "sourcename", "county", "municipality", "elementid", "month", "date1", "date2", "record")
+    val suppFields = Set("sourceid", "sourcename", "county", "municipality", "elementid", "month", "date1", "date2", "value")
     fields.foreach(f => if (!suppFields.contains(f)) {
       throw new BadRequestException(s"Unsupported field: $f", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
     })
@@ -157,7 +157,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
     val omitMonth        = fields.nonEmpty && !fields.contains("month")
     val omitDate1        = fields.nonEmpty && !fields.contains("date1")
     val omitDate2        = fields.nonEmpty && !fields.contains("date2")
-    val omitRecord       = fields.nonEmpty && !fields.contains("record")
+    val omitValue       = fields.nonEmpty && !fields.contains("value")
     recs
       .filter(r => matchesWords(r.sourceId, qp.sources))
       .filter(r => matchesWords(r.sourceName, qp.sourcenames))
@@ -174,8 +174,8 @@ class StationRecordsAccess extends ProdRecordsAccess {
         month = if (omitMonth) None else r.month,
         date1 = if (omitDate1) None else r.date1,
         date2 = if (omitDate2) None else r.date2,
-        record = if (omitRecord) None else r.record
-      )).distinct.sortBy(r => (r.elementId, r.county, r.month, -Math.abs(r.record.get)))
+        value = if (omitValue) None else r.value
+      )).distinct.sortBy(r => (r.elementId, r.county, r.month, -Math.abs(r.value.get)))
 
   }
   // scalastyle:on cyclomatic.complexity

@@ -61,5 +61,5 @@ case class Record(
     @(ApiModelProperty @field)(value="Month.", example="2") month: Option[Int],
     @(ApiModelProperty @field)(value="Date of primary occurrence.", example="1912-02-01") date1: Option[String],
     @(ApiModelProperty @field)(value="Date of secondary occurrence (omitted if identical to date2).", example="1918-02-13") date2: Option[String],
-    @(ApiModelProperty @field)(value="Record value.", example="-50.3") record: Option[Double]
+    @(ApiModelProperty @field)(value="Record value.", example="-50.3") value: Option[Double]
 )
