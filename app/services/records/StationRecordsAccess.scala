@@ -118,9 +118,9 @@ class StationRecordsAccess extends ProdRecordsAccess {
     s"""
        |SELECT
        |  'SN' || stnr AS sourceid,
-       |  name AS sourcename,
-       |  county,
-       |  municipality,
+       |  initcap(name) AS sourcename,
+       |  initcap(county) AS county,
+       |  initcap(municipality) AS municipality,
        |  elem_code AS elementid,
        |  to_char(dato_d, 'MM')::int AS month,
        |  to_char(dato_d, 'YYYY-MM-DD') as date1,
