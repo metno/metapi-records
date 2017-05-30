@@ -96,10 +96,10 @@ class StationRecordsAccess extends ProdRecordsAccess {
       get[String]("municipality") ~
       get[String]("elementId") ~
       get[Int]("month") ~
-      get[String]("date1") ~
-      get[Option[String]]("date2") ~
+      get[String]("referenceTime") ~
+      get[Option[String]]("referenceTime2") ~
       get[Double]("value") map {
-      case sourceid~sourcename~county~municipality~elementid~month~date1~date2~value
+      case sourceid~sourcename~county~municipality~elementid~month~referenceTime~referenceTime2~value
       => Record(
         Some(sourceid),
         Some(sourcename),
@@ -107,8 +107,8 @@ class StationRecordsAccess extends ProdRecordsAccess {
         Some(municipality),
         Some(fromLegacyElem(elementid)),
         Some(month),
-        Some(date1),
-        date2 match { case Some(d2) if d2 != date1 => date2; case _ => None },
+        Some(referenceTime),
+        referenceTime2 match { case Some(rt2) if rt2 != referenceTime => referenceTime2; case _ => None },
         Some(value)
       )
     }
@@ -123,8 +123,8 @@ class StationRecordsAccess extends ProdRecordsAccess {
        |  initcap(municipality) AS municipality,
        |  elem_code AS elementid,
        |  to_char(dato_d, 'MM')::int AS month,
-       |  to_char(dato_d, 'YYYY-MM-DD') as date1,
-       |  to_char(dato_m, 'YYYY-MM-DD') as date2,
+       |  to_char(dato_d, 'YYYY-MM-DD') as referenceTime,
+       |  to_char(dato_m, 'YYYY-MM-DD') as referenceTime2,
        |  record as value
        |FROM t_records
       """.stripMargin
@@ -135,7 +135,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
   override def records(qp: RecordsQueryParameters): List[Record] = {
 
     val fields :Set[String] = FieldSpecification.parse(qp.fields)
-    val suppFields = Set("sourceid", "sourcename", "county", "municipality", "elementid", "month", "date1", "date2", "value")
+    val suppFields = Set("sourceid", "sourcename", "county", "municipality", "elementid", "month", "referencetime", "referenceTime2", "value")
     fields.foreach(f => if (!suppFields.contains(f)) {
       throw new BadRequestException(s"Unsupported field: $f", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
     })
@@ -149,15 +149,15 @@ class StationRecordsAccess extends ProdRecordsAccess {
     // scalastyle:off magic.number
     val mlist = getIntList(qp.months, 1, 12, "months")
     // scalastyle:on magic.number
-    val omitSourceId     = fields.nonEmpty && !fields.contains("sourceid")
-    val omitSourceName   = fields.nonEmpty && !fields.contains("sourcename")
-    val omitCounty       = fields.nonEmpty && !fields.contains("county")
-    val omitMunicipality = fields.nonEmpty && !fields.contains("municipality")
-    val omitElementId    = fields.nonEmpty && !fields.contains("elementid")
-    val omitMonth        = fields.nonEmpty && !fields.contains("month")
-    val omitDate1        = fields.nonEmpty && !fields.contains("date1")
-    val omitDate2        = fields.nonEmpty && !fields.contains("date2")
-    val omitValue       = fields.nonEmpty && !fields.contains("value")
+    val omitSourceId       = fields.nonEmpty && !fields.contains("sourceid")
+    val omitSourceName     = fields.nonEmpty && !fields.contains("sourcename")
+    val omitCounty         = fields.nonEmpty && !fields.contains("county")
+    val omitMunicipality   = fields.nonEmpty && !fields.contains("municipality")
+    val omitElementId      = fields.nonEmpty && !fields.contains("elementid")
+    val omitMonth          = fields.nonEmpty && !fields.contains("month")
+    val omitReferenceTime  = fields.nonEmpty && !fields.contains("referencetime")
+    val omitReferenceTime2 = fields.nonEmpty && !fields.contains("referenceTime2")
+    val omitValue          = fields.nonEmpty && !fields.contains("value")
     recs
       .filter(r => matchesWords(r.sourceId, qp.sources))
       .filter(r => matchesWords(r.sourceName, qp.sourcenames))
@@ -172,8 +172,8 @@ class StationRecordsAccess extends ProdRecordsAccess {
         municipality = if (omitMunicipality) None else r.municipality,
         elementId = if (omitElementId) None else r.elementId,
         month = if (omitMonth) None else r.month,
-        date1 = if (omitDate1) None else r.date1,
-        date2 = if (omitDate2) None else r.date2,
+        referenceTime = if (omitReferenceTime) None else r.referenceTime,
+        referenceTime2 = if (omitReferenceTime2) None else r.referenceTime2,
         value = if (omitValue) None else r.value
       )).distinct.sortBy(r => (r.elementId, r.county, r.month, -Math.abs(r.value.get)))
 

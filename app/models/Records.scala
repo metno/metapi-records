@@ -59,7 +59,8 @@ case class Record(
     @(ApiModelProperty @field)(value="Municipality.", example="Tynset") municipality: Option[String],
     @(ApiModelProperty @field)(value="Element id.", example="min(air_temperature P1D)") elementId: Option[String],
     @(ApiModelProperty @field)(value="Month.", example="2") month: Option[Int],
-    @(ApiModelProperty @field)(value="Date of primary occurrence.", example="1912-02-01") date1: Option[String],
-    @(ApiModelProperty @field)(value="Date of secondary occurrence (omitted if identical to date2).", example="1918-02-13") date2: Option[String],
+    @(ApiModelProperty @field)(value="Date/time of occurrence 1.", example="1912-02-01") referenceTime: Option[String],
+    @(ApiModelProperty @field)(
+      value="Date/time of occurrence 2 (omitted if identical to occurrence 1).", example="1918-02-13") referenceTime2: Option[String],
     @(ApiModelProperty @field)(value="Record value.", example="-50.3") value: Option[Double]
 )
