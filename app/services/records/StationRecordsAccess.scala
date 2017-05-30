@@ -108,7 +108,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
         Some(fromLegacyElem(elementid)),
         Some(month),
         Some(date1),
-        date2,
+        date2 match { case Some(d2) if d2 != date1 => date2; case _ => None },
         Some(value)
       )
     }
