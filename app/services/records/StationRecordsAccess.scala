@@ -58,7 +58,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
     words match {
       case Some(wlist) => {
         val w1 = w.getOrElse("").trim.toLowerCase
-        wlist.split(",").toSet.exists((w2: String) => { w1.matches(w2.trim.toLowerCase.replace("*", ".*")) } )
+        wlist.split(",").toSet.exists((w2: String) => w1.matches(w2.trim.toLowerCase.replace("(", "\\(").replace(")", "\\)").replace("*", ".*")))
       }
       case None => true
     }
