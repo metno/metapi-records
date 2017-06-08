@@ -68,7 +68,7 @@ class RecordsController @Inject()(recordsAccess: RecordsAccess) extends Controll
     elements: Option[String],
     @ApiParam(value = "The months to get records for as a comma-separated list of integers or integer ranges between 1 and 12, e.g. '1,5,8-12'.  If left out, the output is not filtered on month.")
     months: Option[String],
-    @ApiParam(value = "The information to return as a comma-separated list of 'sourceid', 'sourcename', 'county', 'municipality', 'elementid', 'month', 'date1', 'date2', or 'value'. For example 'county,month,date1,elementid,value'. If omitted, all fields are returned.")
+    @ApiParam(value = "The information to return as a comma-separated list of 'sourceid', 'sourcename', 'county', 'municipality', 'elementid', 'month', 'referencetime', 'referencetime2', or 'value'. For example 'county,month,referencetime1,elementid,value'. If omitted, all fields are returned.")
     fields: Option[String],
     @ApiParam(value = "The output format of the result.",
       allowableValues = "jsonld",

@@ -135,7 +135,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
   override def records(qp: RecordsQueryParameters): List[Record] = {
 
     val fields :Set[String] = FieldSpecification.parse(qp.fields)
-    val suppFields = Set("sourceid", "sourcename", "county", "municipality", "elementid", "month", "referencetime", "referenceTime2", "value")
+    val suppFields = Set("sourceid", "sourcename", "county", "municipality", "elementid", "month", "referencetime", "referencetime2", "value")
     fields.foreach(f => if (!suppFields.contains(f)) {
       throw new BadRequestException(s"Unsupported field: $f", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
     })
@@ -156,7 +156,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
     val omitElementId      = fields.nonEmpty && !fields.contains("elementid")
     val omitMonth          = fields.nonEmpty && !fields.contains("month")
     val omitReferenceTime  = fields.nonEmpty && !fields.contains("referencetime")
-    val omitReferenceTime2 = fields.nonEmpty && !fields.contains("referenceTime2")
+    val omitReferenceTime2 = fields.nonEmpty && !fields.contains("referencetime2")
     val omitValue          = fields.nonEmpty && !fields.contains("value")
     recs
       .filter(r => matchesWords(r.sourceId, qp.sources))
