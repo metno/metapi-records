@@ -38,7 +38,7 @@ class MockRecordsAccess extends RecordsAccess {
   // scalastyle:off magic.number
 
   def records(qp: RecordsQueryParameters): List[Record] = {
-    List(new Record(Some("SN9600"), Some("TYNSET"), Some("Hedmark"), Some("Tynset"), Some("min(air_temperature P1D)"), Some(2), Some("1912-02-01"), None,
+    List(new Record(Some("SN9600"), Some("TYNSET"), Some("Hedmark"), Some("Tynset"), Some("min(air_temperature P1D)"), Some(2), Some("1912-02-01"),
       Some(-46.6)))
   }
 

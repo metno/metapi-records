@@ -97,9 +97,8 @@ class StationRecordsAccess extends ProdRecordsAccess {
       get[String]("elementId") ~
       get[Int]("month") ~
       get[String]("referenceTime") ~
-      get[Option[String]]("referenceTime2") ~
       get[Double]("value") map {
-      case sourceid~sourcename~county~municipality~elementid~month~referenceTime~referenceTime2~value
+      case sourceid~sourcename~county~municipality~elementid~month~referenceTime~value
       => Record(
         Some(sourceid),
         Some(sourcename),
@@ -108,7 +107,6 @@ class StationRecordsAccess extends ProdRecordsAccess {
         Some(fromLegacyElem(elementid)),
         Some(month),
         Some(referenceTime),
-        referenceTime2 match { case Some(rt2) if rt2 != referenceTime => referenceTime2; case _ => None },
         Some(value)
       )
     }
@@ -124,7 +122,6 @@ class StationRecordsAccess extends ProdRecordsAccess {
        |  elem_code AS elementid,
        |  to_char(dato_d, 'MM')::int AS month,
        |  to_char(dato_d, 'YYYY-MM-DD') as referenceTime,
-       |  to_char(dato_m, 'YYYY-MM-DD') as referenceTime2,
        |  record as value
        |FROM t_records
       """.stripMargin
@@ -135,7 +132,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
   override def records(qp: RecordsQueryParameters): List[Record] = {
 
     val fields :Set[String] = FieldSpecification.parse(qp.fields)
-    val suppFields = Set("sourceid", "sourcename", "county", "municipality", "elementid", "month", "referencetime", "referencetime2", "value")
+    val suppFields = Set("sourceid", "sourcename", "county", "municipality", "elementid", "month", "referencetime", "value")
     fields.foreach(f => if (!suppFields.contains(f)) {
       throw new BadRequestException(s"Unsupported field: $f", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
     })
@@ -156,7 +153,6 @@ class StationRecordsAccess extends ProdRecordsAccess {
     val omitElementId      = fields.nonEmpty && !fields.contains("elementid")
     val omitMonth          = fields.nonEmpty && !fields.contains("month")
     val omitReferenceTime  = fields.nonEmpty && !fields.contains("referencetime")
-    val omitReferenceTime2 = fields.nonEmpty && !fields.contains("referencetime2")
     val omitValue          = fields.nonEmpty && !fields.contains("value")
     recs
       .filter(r => matchesWords(r.sourceId, qp.sources))
@@ -173,7 +169,6 @@ class StationRecordsAccess extends ProdRecordsAccess {
         elementId = if (omitElementId) None else r.elementId,
         month = if (omitMonth) None else r.month,
         referenceTime = if (omitReferenceTime) None else r.referenceTime,
-        referenceTime2 = if (omitReferenceTime2) None else r.referenceTime2,
         value = if (omitValue) None else r.value
       )).distinct.sortBy(r => (r.elementId, r.county, r.month, -Math.abs(r.value.getOrElse(0.0))))
 
