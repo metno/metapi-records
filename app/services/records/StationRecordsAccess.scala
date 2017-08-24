@@ -44,13 +44,13 @@ import play.Logger
   */
 class StationRecordsAccess extends ProdRecordsAccess {
 
-  // supported element IDs with corresponding legacy codes (### hard-coded for now)
+  // supported element IDs with corresponding old codes (### hard-coded for now)
   private val elemMap: Map[String, String] = Map(
     "min(air_temperature P1D)" -> "TAN",
     "max(air_temperature P1D)" -> "TAX"
   )
   private val invElemMap = elemMap.map(_.swap) // ### WARNING: This assumes that elemMap is a one-to-one relation
-  private def fromLegacyElem(legacyElem: String) = invElemMap(legacyElem)
+  private def fromOldElem(oldElem: String) = invElemMap(oldElem)
 
   // Returns true iff words is None or w ("" if None) matches any word in the comma-separated list words. The matching is case-insensitive and a word in
   // words is allowed to contain asterisks to represent zero or more characters.
@@ -104,7 +104,7 @@ class StationRecordsAccess extends ProdRecordsAccess {
         Some(sourcename),
         Some(county),
         Some(municipality),
-        Some(fromLegacyElem(elementid)),
+        Some(fromOldElem(elementid)),
         Some(month),
         Some(referenceTime),
         Some(value)
